@@ -2,55 +2,83 @@ let camera, scene, renderer, controls;
 const scenes = [];
 let currentScene = 0;
 const hotspots = [];
+let sceneNames = []; // Para guardar los nombres de las escenas
 
 init();
 animate();
 
-function init() {
-    // Scene setup
+async function init() {
+    // Configuración de la cámara
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 0.1); // Slightly offset to avoid camera inside the sphere issues
+    camera.position.set(0, 0, 0.1); // Ligeramente desplazada para evitar problemas con la cámara dentro de la esfera
 
+    // Creación de la escena
     scene = new THREE.Scene();
 
+    // Configuración del renderizador
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    // Configuración de los controles
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableZoom = false;
     controls.enablePan = false;
 
-    // Load 360 images
-    const textureLoader = new THREE.TextureLoader();
-    const textures = [
-        textureLoader.load('./images/oficina_pno.jpg'),
-        textureLoader.load('./images/bedroom.jpg'),
-        textureLoader.load('./images/shot-panoramic-composition-library.jpg')
-    ];
-
-    // Create meshes for each scene
-    const geometry = new THREE.SphereGeometry(500, 60, 40);
-    geometry.scale(-1, 1, 1);
-
-    const materials = textures.map(texture => new THREE.MeshBasicMaterial({ map: texture }));
-
-    const mesh1 = new THREE.Mesh(geometry, materials[0]);
-    const mesh2 = new THREE.Mesh(geometry, materials[1]);
-    const mesh3 = new THREE.Mesh(geometry, materials[2]);
-
-    scenes.push(mesh1, mesh2, mesh3);
-
-    // Add the initial scene
-    scene.add(scenes[currentScene]);
-
-    // Create hotspots
-    createHotspot(mesh1, new THREE.Vector3(50, 0, -200), 1); // Hotspot to Scene 2
-    createHotspot(mesh2, new THREE.Vector3(50, 0, -200), 2); // Hotspot to Scene 3
-    createHotspot(mesh3, new THREE.Vector3(50, 0, -200), 0); // Hotspot to Scene 1
+    try {
+        const imagesData = await fetchScenesData('/public/data.json');
+        sceneNames = imagesData.map(scene => scene.name); // Guardar los nombres de las escenas
+        populateImageList(imagesData);
+        const textures = await loadTextures(imagesData);
+        createMeshes(textures);
+        updateSelectedSceneName(); // Actualizar el nombre de la escena inicial
+    } catch (error) {
+        console.error('Error loading JSON or textures:', error);
+    }
 
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousedown', onDocumentMouseDown, false);
+}
+
+async function fetchScenesData(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.scenes;
+}
+
+function loadTextures(imagesData) {
+    const textureLoader = new THREE.TextureLoader();
+    const texturePromises = imagesData.map(scene => {
+        return new Promise((resolve, reject) => {
+            textureLoader.load(
+                scene.image,
+                texture => resolve(texture),
+                undefined,
+                err => reject(err)
+            );
+        });
+    });
+
+    return Promise.all(texturePromises);
+}
+
+function createMeshes(textures) {
+    const geometry = new THREE.SphereGeometry(500, 60, 40);
+    geometry.scale(-1, 1, 1);
+
+    textures.forEach((texture, index) => {
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const mesh = new THREE.Mesh(geometry, material);
+        scenes.push(mesh);
+    });
+
+    // Añadir la escena inicial
+    scene.add(scenes[currentScene]);
+
+    // Crear hotspots
+    //createHotspot(scenes[0], new THREE.Vector3(50, 0, -200), 1); // Hotspot a la escena 2
+    //createHotspot(scenes[1], new THREE.Vector3(50, 0, -200), 2); // Hotspot a la escena 3
+    //createHotspot(scenes[2], new THREE.Vector3(50, 0, -200), 0); // Hotspot a la escena 1
 }
 
 function createHotspot(mesh, position, targetScene) {
@@ -69,6 +97,7 @@ function changeScene(index) {
         scene.remove(scenes[currentScene]);
         currentScene = index;
         scene.add(scenes[currentScene]);
+        updateSelectedSceneName();
     }
 }
 
@@ -102,4 +131,21 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
+}
+
+function populateImageList(scenesData) {
+    const imageMenu = document.getElementById('imageMenu');
+    scenesData.forEach((scene, index) => {
+        const li = document.createElement('li');
+        li.textContent = scene.name;
+        li.onclick = () => changeScene(index);
+        imageMenu.appendChild(li);
+    });
+}
+
+function updateSelectedSceneName() {
+    const selectedSpan = document.querySelector('.selected');
+    if (selectedSpan) {
+        selectedSpan.textContent = sceneNames[currentScene];
+    }
 }

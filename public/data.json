@@ -1,0 +1,38 @@
+{
+    "scenes": [
+        {
+            "name": "oficina_pno",
+            "image": "./public/assets/images/oficina_pno.jpg",
+            "buttons": [
+                {
+                    "id": "button1",
+                    "position": {
+                        "x": 100,
+                        "y": 200
+                    },
+                    "sceneIndex": 1
+                }
+            ]
+        },
+        {
+            "name": "bedroom",
+            "image": "./public/assets/images/bedroom.jpg",
+            "buttons": []
+        },
+        {
+            "name": "library",
+            "image": "./public/assets/images/library.jpg",
+            "buttons": []
+        },
+        {
+            "name": "sala_estar",
+            "image": "./public/assets/images/sala_estar.jpg",
+            "buttons": []
+        },
+        {
+            "name": "equirectangular",
+            "image": "./public/assets/images/equirectangular.png",
+            "buttons": []
+        }
+    ]
+}
