@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360 Image Viewer</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        .button-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button onclick="changeScene(0)">Scene 1</button>
+        <button onclick="changeScene(1)">Scene 2</button>
+        <button onclick="changeScene(2)">Scene 3</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
