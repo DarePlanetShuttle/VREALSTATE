@@ -1,7 +1,7 @@
 {
     "scenes": [
         {
-            "name": "oficina_pno",
+            "name": "Office",
             "image": "./public/assets/images/oficina_pno.jpg",
             "buttons": [
                 {
@@ -18,41 +18,80 @@
                     "position": {
                         "x": 10,
                         "y": 0,
-                        "z": 20
+                        "z": 30
                     },
                     "link": "./public/assets/images/library.jpg"
                 }
             ]
         },
         {
-            "name": "bedroom",
+            "name": "Bedroom",
             "image": "./public/assets/images/bedroom.jpg",
             "buttons": [
                 {
                     "id": "3",
                     "position": {
-                        "x": 5,
+                        "x": 10,
                         "y": 0,
-                        "z": 0
+                        "z": 5
+                    },
+                    "link": "./public/assets/images/oficina_pno.jpg"
+                },
+                {
+                    "id": "4",
+                    "position": {
+                        "x": -11,
+                        "y": 0,
+                        "z": 7
+                    },
+                    "link": "./public/assets/images/bath_forest.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Library",
+            "image": "./public/assets/images/library.jpg",
+            "buttons": [
+                {
+                    "id": "5",
+                    "position": {
+                        "x": -5,
+                        "y": 0,
+                        "z": -15
+                    },
+                    "link": "./public/assets/images/sala_estar.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Sala_estar",
+            "image": "./public/assets/images/sala_estar.jpg",
+            "buttons": [
+                {
+                    "id": "6",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 15
                     },
                     "link": "./public/assets/images/library.jpg"
                 }
             ]
         },
         {
-            "name": "library",
-            "image": "./public/assets/images/library.jpg",
-            "buttons": []
-        },
-        {
-            "name": "sala_estar",
-            "image": "./public/assets/images/sala_estar.jpg",
-            "buttons": []
-        },
-        {
-            "name": "equirectangular",
-            "image": "./public/assets/images/equirectangular.png",
-            "buttons": []
+            "name": "Bath",
+            "image": "./public/assets/images/bath_forest.jpg",
+            "buttons": [
+                {
+                    "id": "7",
+                    "position": {
+                        "x": -19,
+                        "y": 0,
+                        "z": 6
+                    },
+                    "link": "./public/assets/images/bedroom.jpg"
+                }
+            ]
         }
     ]
 }
