@@ -5,19 +5,39 @@
             "image": "./public/assets/images/oficina_pno.jpg",
             "buttons": [
                 {
-                    "id": "button1",
+                    "id": "1",
                     "position": {
-                        "x": 100,
-                        "y": 200
+                        "x": 15,
+                        "y": 0,
+                        "z": 0
                     },
-                    "sceneIndex": 1
+                    "link": "./public/assets/images/bedroom.jpg"
+                },
+                {
+                    "id": "2",
+                    "position": {
+                        "x": 10,
+                        "y": 0,
+                        "z": 10
+                    },
+                    "link": "./public/assets/images/library.jpg"
                 }
             ]
         },
         {
             "name": "bedroom",
             "image": "./public/assets/images/bedroom.jpg",
-            "buttons": []
+            "buttons": [
+                {
+                    "id": "3",
+                    "position": {
+                        "x": 5,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "link": "./public/assets/images/library.jpg"
+                }
+            ]
         },
         {
             "name": "library",
