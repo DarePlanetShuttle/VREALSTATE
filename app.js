@@ -189,7 +189,7 @@ function updateSelectedSceneName() {
 
 function createStyledVRButton(buttonData) {
     const geometry = new THREE.SphereGeometry(0.5, 8, 8); // Example button geometry
-    const material = new THREE.MeshBasicMaterial({ color: 0x2a2f3b }); // Match background color
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 , shininess: 100, specular: 0x888888 }); // Match background color
     const vrButton = new THREE.Mesh(geometry, material);
     vrButton.position.set(buttonData.position.x, buttonData.position.y, buttonData.position.z);
     vrButton.userData.link = buttonData.link;
@@ -202,12 +202,7 @@ function checkAndPrintButtons(sceneData) {
     clearButtons(); // Clear existing buttons before adding new ones
 
     if (sceneData.buttons && sceneData.buttons.length > 0) {
-        console.log(`Scene: ${sceneData.name}`);
         sceneData.buttons.forEach(buttonData => {
-            console.log(`Button ID: ${buttonData.id}`);
-            console.log(`Position: x=${buttonData.position.x}, y=${buttonData.position.y}, z=${buttonData.position.z}`);
-            console.log(`Link: ${buttonData.link}`);
-
             // Create a styled VRButton
             const vrButton = createStyledVRButton(buttonData);
 
@@ -224,9 +219,6 @@ function clearButtons() {
     });
     hotspots.length = 0;
 }
-
-
-
 
 
 

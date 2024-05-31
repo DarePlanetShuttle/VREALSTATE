@@ -64,7 +64,7 @@
             ]
         },
         {
-            "name": "Sala_estar",
+            "name": "Living Room",
             "image": "./public/assets/images/sala_estar.jpg",
             "buttons": [
                 {
