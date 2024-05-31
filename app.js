@@ -39,7 +39,7 @@ async function init() {
         const textures = await loadTextures(scenesData);
         createMeshes(textures);
         updateSelectedSceneName(); // Update initial scene name
-        checkAndPrintButtons(scenesData);
+        checkAndPrintButtons(scenesData[currentScene]); // Only load buttons for the initial scene
     } catch (error) {
         console.error('Error loading JSON or textures:', error);
     }
@@ -89,7 +89,7 @@ function changeScene(index) {
     if (index >= 0 && index < scenes.length) {
         // Remove current scene and clear hotspots
         scene.remove(scenes[currentScene]);
-        hotspots.forEach(hotspot => scene.remove(hotspot));
+        clearButtons();
         hotspots.length = 0;
 
         // Change to the new scene
@@ -98,7 +98,7 @@ function changeScene(index) {
         updateSelectedSceneName();
 
         // Add buttons for the new scene
-        checkAndPrintButtons([scenesData[currentScene]]);
+        checkAndPrintButtons(scenesData[currentScene]);
     }
 }
 
@@ -198,25 +198,34 @@ function createStyledVRButton(buttonData) {
     return vrButton;
 }
 
-function checkAndPrintButtons(scenesData) {
-    scenesData.forEach(sceneData => {
-        if (sceneData.buttons && sceneData.buttons.length > 0) {
-            console.log(`Scene: ${sceneData.name}`);
-            sceneData.buttons.forEach(buttonData => {
-                console.log(`Button ID: ${buttonData.id}`);
-                console.log(`Position: x=${buttonData.position.x}, y=${buttonData.position.y}, z=${buttonData.position.z}`);
-                console.log(`Link: ${buttonData.link}`);
+function checkAndPrintButtons(sceneData) {
+    clearButtons(); // Clear existing buttons before adding new ones
 
-                // Create a styled VRButton
-                const vrButton = createStyledVRButton(buttonData);
+    if (sceneData.buttons && sceneData.buttons.length > 0) {
+        console.log(`Scene: ${sceneData.name}`);
+        sceneData.buttons.forEach(buttonData => {
+            console.log(`Button ID: ${buttonData.id}`);
+            console.log(`Position: x=${buttonData.position.x}, y=${buttonData.position.y}, z=${buttonData.position.z}`);
+            console.log(`Link: ${buttonData.link}`);
 
-                // Add the button to the current scene
-                scenes[currentScene].add(vrButton);
-                hotspots.push(vrButton); // Add to hotspots for raycasting
-            });
-        }
-    });
+            // Create a styled VRButton
+            const vrButton = createStyledVRButton(buttonData);
+
+            // Add the button to the current scene
+            scenes[currentScene].add(vrButton);
+            hotspots.push(vrButton); // Add to hotspots for raycasting
+        });
+    }
 }
+
+function clearButtons() {
+    hotspots.forEach(hotspot => {
+        scene.remove(hotspot);
+    });
+    hotspots.length = 0;
+}
+
+
 
 
 

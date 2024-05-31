@@ -7,9 +7,9 @@
                 {
                     "id": "1",
                     "position": {
-                        "x": 15,
-                        "y": 0,
-                        "z": 0
+                        "x": -15,
+                        "y": -3,
+                        "z": 24
                     },
                     "link": "./public/assets/images/bedroom.jpg"
                 },
@@ -18,7 +18,7 @@
                     "position": {
                         "x": 10,
                         "y": 0,
-                        "z": 10
+                        "z": 20
                     },
                     "link": "./public/assets/images/library.jpg"
                 }
