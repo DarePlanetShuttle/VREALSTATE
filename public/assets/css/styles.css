@@ -98,3 +98,37 @@ body {
     display: none;
     opacity: 0;
 }
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    min-width: 10em;
+    position: absolute;
+    top: 0;
+    right: 244px;
+    margin: 2em;
+    z-index: 2;
+}
+
+#removeFurnitureButton, #redesignButton {
+    background: #2a2f3b;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px #2a2f3b solid;
+    border-radius: 0.5em;
+    margin-bottom: 4px;
+    padding: 0.20em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#redesignButton:hover {
+    background-color: gainsboro;
+    color: black;
+}
+
+#removeFurnitureButton:hover {
+    background-color: brown;
+}
