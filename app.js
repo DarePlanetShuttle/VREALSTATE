@@ -27,7 +27,7 @@ async function init() {
     mouse = new THREE.Vector2();
 
     try {
-        scenesData = await fetchScenesData('/public/data.json');
+        scenesData = await fetchScenesData('./public/data.json');
         sceneNames = scenesData.map(scene => scene.name);
         populateImageList(scenesData);
         const textures = await loadTextures(scenesData);
