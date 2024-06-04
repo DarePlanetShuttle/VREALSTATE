@@ -1,3 +1,5 @@
+import { VRButton } from './public/assets/js/VRButton.js';
+
 let camera, scene, renderer, controls;
 const scenes = [];
 let currentScene = 0;
@@ -23,8 +25,8 @@ async function init() {
     controls.enableZoom = false;
     controls.enablePan = false;
 
-    raycaster = new THREE.Raycaster();
-    mouse = new THREE.Vector2();
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
 
     try {
         scenesData = await fetchScenesData('./public/data.json');
@@ -39,11 +41,13 @@ async function init() {
     }
 
     window.addEventListener('resize', onWindowResize, false);
-    document.addEventListener('mousemove', onDocumentMouseMove, false);
-    document.addEventListener('click', onDocumentClick, false);
+    document.addEventListener('mousemove', (event) => onDocumentMouseMove(event, raycaster, mouse), false);
+    document.addEventListener('click', (event) => onDocumentClick(event, raycaster, mouse), false);
 
     document.getElementById('removeFurnitureButton').addEventListener('click', handleRemoveFurnitureButtonClick);
     document.getElementById('redesignButton').addEventListener('click', handleRedesignButtonClick);
+
+    animate();
 }
 
 async function fetchScenesData(url) {
@@ -158,7 +162,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event, raycaster, mouse) {
     event.preventDefault();
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -181,7 +185,7 @@ function onDocumentMouseMove(event) {
     }
 }
 
-function onDocumentClick(event) {
+function onDocumentClick(event, raycaster, mouse) {
     event.preventDefault();
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -257,138 +261,4 @@ function clearButtons() {
     hotspots.length = 0;
 }
 
-class VRButton {
-    static createButton(renderer, sessionInit = {}) {
-        const button = document.createElement('button');
-
-        function showEnterVR() {
-            let currentSession = null;
-
-            async function onSessionStarted(session) {
-                session.addEventListener('end', onSessionEnded);
-                await renderer.xr.setSession(session);
-                button.textContent = 'EXIT VR';
-                currentSession = session;
-            }
-
-            function onSessionEnded() {
-                currentSession.removeEventListener('end', onSessionEnded);
-                button.textContent = 'ENTER VR';
-                currentSession = null;
-            }
-
-            button.style.display = '';
-            button.style.cursor = 'pointer';
-            button.style.left = 'calc(50% - 50px)';
-            button.style.width = '100px';
-            button.textContent = 'ENTER VR';
-
-            const sessionOptions = {
-                ...sessionInit,
-                optionalFeatures: ['local-floor', 'bounded-floor', 'layers', ...(sessionInit.optionalFeatures || [])],
-            };
-
-            button.onmouseenter = function () {
-                button.style.opacity = '1.0';
-            };
-
-            button.onmouseleave = function () {
-                button.style.opacity = '0.5';
-            };
-
-            button.onclick = function () {
-                if (currentSession === null) {
-                    navigator.xr.requestSession('immersive-vr', sessionOptions).then(onSessionStarted);
-                } else {
-                    currentSession.end();
-                }
-            };
-
-            if (navigator.xr.requestSession !== undefined) {
-                navigator.xr.requestSession('immersive-vr', sessionOptions).then(onSessionStarted).catch((err) => {
-                    console.warn(err);
-                });
-            }
-        }
-
-        function disableButton() {
-            button.style.display = '';
-            button.style.cursor = 'auto';
-            button.style.left = 'calc(50% - 75px)';
-            button.style.width = '150px';
-            button.onmouseenter = null;
-            button.onmouseleave = null;
-            button.onclick = null;
-        }
-
-        function showWebXRNotFound() {
-            disableButton();
-            button.textContent = 'VR NOT SUPPORTED';
-        }
-
-        function showVRNotAllowed(exception) {
-            disableButton();
-            console.warn('Exception when trying to call xr.isSessionSupported', exception);
-            button.textContent = 'VR NOT ALLOWED';
-        }
-
-        function stylizeElement(element) {
-            element.style.position = 'absolute';
-            element.style.bottom = '20px';
-            element.style.padding = '12px 6px';
-            element.style.border = '1px solid #fff';
-            element.style.borderRadius = '4px';
-            element.style.background = 'rgba(0,0,0,0.1)';
-            element.style.color = '#fff';
-            element.style.font = 'normal 13px sans-serif';
-            element.style.textAlign = 'center';
-            element.style.opacity = '0.5';
-            element.style.outline = 'none';
-            element.style.zIndex = '999';
-        }
-
-        if ('xr' in navigator) {
-            button.id = 'VRButton';
-            button.style.display = 'none';
-            stylizeElement(button);
-
-            navigator.xr.isSessionSupported('immersive-vr').then(function (supported) {
-                supported ? showEnterVR() : showWebXRNotFound();
-                if (supported && VRButton.xrSessionIsGranted) {
-                    button.click();
-                }
-            }).catch(showVRNotAllowed);
-
-            return button;
-        } else {
-            const message = document.createElement('a');
-            if (window.isSecureContext === false) {
-                message.href = document.location.href.replace(/^http:/, 'https:');
-                message.innerHTML = 'WEBXR NEEDS HTTPS';
-            } else {
-                message.href = 'https://immersiveweb.dev/';
-                message.innerHTML = 'WEBXR NOT AVAILABLE';
-            }
-            message.style.left = 'calc(50% - 90px)';
-            message.style.width = '180px';
-            message.style.textDecoration = 'none';
-            stylizeElement(message);
-            return message;
-        }
-    }
-
-    static registerSessionGrantedListener() {
-        if (typeof navigator !== 'undefined' && 'xr' in navigator) {
-            if (/WebXRViewer\//i.test(navigator.userAgent)) return;
-            navigator.xr.addEventListener('sessiongranted', () => {
-                VRButton.xrSessionIsGranted = true;
-            });
-        }
-    }
-}
-
-VRButton.xrSessionIsGranted = false;
-VRButton.registerSessionGrantedListener();
-
 init();
-animate();

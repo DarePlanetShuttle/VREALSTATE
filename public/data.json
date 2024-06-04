@@ -3,104 +3,35 @@
         {
             "name": "Dinner room",
             "image": "./public/assets/images/dinner-room.jpg",
-            "buttons": [
-                {
-                    "id": "1",
-                    "position": {
-                        "x": -15,
-                        "y": -3,
-                        "z": 24
-                    },
-                    "link": "./public/assets/images/bedroom.jpg"
-                },
-                {
-                    "id": "2",
-                    "position": {
-                        "x": 10,
-                        "y": 0,
-                        "z": 30
-                    },
-                    "link": "./public/assets/images/library.jpg"
-                }],
+            "buttons": [],
             "redesign":"./public/assets/images/redesign-dinner-room.png",
-            "remove_furniture":"./public/assets/images/remove-dinner-room.png"
-
-            
+            "remove_furniture":"./public/assets/images/remove-dinner-room.png"   
         },
         {
             "name": "Bedroom",
             "image": "./public/assets/images/bedroom.png",
-            "buttons": [
-                {
-                    "id": "3",
-                    "position": {
-                        "x": 10,
-                        "y": 0,
-                        "z": 5
-                    },
-                    "link": "./public/assets/images/oficina_pno.jpg"
-                },
-                {
-                    "id": "4",
-                    "position": {
-                        "x": -11,
-                        "y": 0,
-                        "z": 7
-                    },
-                    "link": "./public/assets/images/bath_forest.jpg"
-                }
-            ], 
+            "buttons": [], 
             "redesign":"./public/assets/images/redesign-bedroom.png",
             "remove_furniture":"./public/assets/images/remove-bedroom.png"
         },
         {
             "name": "Second Room",
             "image": "./public/assets/images/second-room.jpg",
-            "buttons": [
-                {
-                    "id": "6",
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 15
-                    },
-                    "link": "./public/assets/images/library.jpg"
-                }
-            ],
+            "buttons": [],
             "redesign":"./public/assets/images/redesign-second-room.png",
             "remove_furniture":"./public/assets/images/remove-second-room.png"
         },
         {
             "name": "Bath",
             "image": "./public/assets/images/bath_forest.jpg",
-            "buttons": [
-                {
-                    "id": "7",
-                    "position": {
-                        "x": -19,
-                        "y": 0,
-                        "z": 6
-                    },
-                    "link": "./public/assets/images/bedroom.jpg"
-                }
-            ],
+            "buttons": [],
             "redesign":"./public/assets/images/redesign_bath_forest.png",
             "remove_furniture":""
         },
         {
             "name": "Sunroom",
             "image": "./public/assets/images/sunroom.jpg",
-            "buttons": [
-                {
-                    "id": "7",
-                    "position": {
-                        "x": -19,
-                        "y": 0,
-                        "z": 6
-                    },
-                    "link": "./public/assets/images/bedroom.jpg"
-                }
-            ],
+            "buttons": [],
             "redesign":"./public/assets/images/redesign-sunroom.png",
             "remove_furniture":""
         }
