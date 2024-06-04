@@ -47,6 +47,10 @@ async function init() {
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousemove', onDocumentMouseMove, false); // Add mousemove event listener
     document.addEventListener('click', onDocumentClick, false); // Add click event listener
+
+    // Add event listeners for the buttons
+    document.getElementById('removeFurnitureButton').addEventListener('click', handleRemoveFurnitureButtonClick);
+    document.getElementById('redesignButton').addEventListener('click', handleRedesignButtonClick);
 }
 
 async function fetchScenesData(url) {
@@ -99,6 +103,58 @@ function changeScene(index) {
 
         // Add buttons for the new scene
         checkAndPrintButtons(scenesData[currentScene]);
+    } else {
+        console.error(`Invalid scene index: ${index}`);
+    }
+}
+
+
+
+function handleRemoveFurnitureButtonClick() {
+    const currentSceneData = scenesData[currentScene];
+    if (currentSceneData.remove_furniture) {
+        changeTexture(currentSceneData.remove_furniture);
+    } else {
+        console.error('No remove_furniture link found for the current scene');
+    }
+}
+
+function handleRedesignButtonClick() {
+    const currentSceneData = scenesData[currentScene];
+    if (currentSceneData.redesign) {
+        changeTexture(currentSceneData.redesign);
+    } else {
+        console.error('No redesign link found for the current scene');
+    }
+}
+
+function changeTexture(texturePath) {
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+        texturePath,
+        (texture) => {
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            scenes[currentScene].material = material;
+        },
+        undefined,
+        (err) => {
+            console.error(`Error loading texture: ${texturePath}`, err);
+        }
+    );
+}
+
+function changeSceneBySpecialLink(link, type) {
+    // Find the scene index by comparing the link with the `remove_furniture` and `redesign` keys
+    const targetSceneIndex = scenesData.findIndex(scene => {
+        if (type === 'remove_furniture' && scene.image === link) return true;
+        if (type === 'redesign' && scene.image === link) return true;
+        return false;
+    });
+
+    if (targetSceneIndex >= 0) {
+        changeScene(targetSceneIndex);
+    } else {
+        console.error(`Scene with ${type} link ${link} not found`);
     }
 }
 
@@ -189,7 +245,7 @@ function updateSelectedSceneName() {
 
 function createStyledVRButton(buttonData) {
     const geometry = new THREE.SphereGeometry(0.5, 8, 8); // Example button geometry
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 , shininess: 100, specular: 0x888888 }); // Match background color
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // Match background color
     const vrButton = new THREE.Mesh(geometry, material);
     vrButton.position.set(buttonData.position.x, buttonData.position.y, buttonData.position.z);
     vrButton.userData.link = buttonData.link;
