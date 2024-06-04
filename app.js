@@ -6,6 +6,8 @@ let sceneNames = []; // To store scene names
 let scenesData = []; // Global variable to store scenes data
 let INTERSECTED; // To store the currently intersected object
 
+const originalTextures = {};
+
 async function init() {
     // Camera configuration
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -113,7 +115,7 @@ function changeScene(index) {
 function handleRemoveFurnitureButtonClick() {
     const currentSceneData = scenesData[currentScene];
     if (currentSceneData.remove_furniture) {
-        changeTexture(currentSceneData.remove_furniture);
+        toggleTexture(currentSceneData.remove_furniture);
     } else {
         console.error('No remove_furniture link found for the current scene');
     }
@@ -122,17 +124,34 @@ function handleRemoveFurnitureButtonClick() {
 function handleRedesignButtonClick() {
     const currentSceneData = scenesData[currentScene];
     if (currentSceneData.redesign) {
-        changeTexture(currentSceneData.redesign);
+        toggleTexture(currentSceneData.redesign);
     } else {
         console.error('No redesign link found for the current scene');
     }
 }
 
+function toggleTexture(texturePath) {
+    const currentMaterial = scenes[currentScene].material;
+    const currentTexture = currentMaterial.map;
+
+    if (!originalTextures[currentScene]) {
+        // Store the original texture the first time a new texture is applied
+        originalTextures[currentScene] = currentTexture;
+        changeTexture(texturePath);
+    } else {
+        // Toggle back to the original texture
+        scenes[currentScene].material = new THREE.MeshBasicMaterial({ map: originalTextures[currentScene] });
+        delete originalTextures[currentScene]; // Clear the stored original texture
+    }
+}
+
 function changeTexture(texturePath) {
+    console.log(`Changing texture to: ${texturePath}`);
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
         texturePath,
         (texture) => {
+            console.log(`Texture loaded successfully: ${texturePath}`);
             const material = new THREE.MeshBasicMaterial({ map: texture });
             scenes[currentScene].material = material;
         },
@@ -142,6 +161,8 @@ function changeTexture(texturePath) {
         }
     );
 }
+
+
 
 function changeSceneBySpecialLink(link, type) {
     // Find the scene index by comparing the link with the `remove_furniture` and `redesign` keys
